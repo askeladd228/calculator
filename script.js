@@ -72,14 +72,16 @@ operators.forEach(operator => {
       secondOperand = 0; //reset the second operand/ fixes error when spam-clicking the operator
       smallDisplay.innerHTML = firstOperand + ' ' + operator.innerText;
     };
+
+    equal.addEventListener('click', () => {
+      let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+      bigDisplay.innerHTML = result;
+      smallDisplay.innerHTML = firstOperand + ' ' + operator.innerText + ' ' + secondOperand + ' ' + equal.innerText;
+    });
   });
 });
 
-equal.addEventListener('click', () => {
-  let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
-  bigDisplay.innerHTML = result;
-  smallDisplay.innerHTML += ' ' + secondOperand + ' ' + equal.innerText;
-});
+
 
 clearField.addEventListener('click', () => clear());
 
