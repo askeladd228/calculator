@@ -19,8 +19,11 @@ function operate (operator, a, b) {
 }
 
 function clear () {
-  bigDisplay.innerHTML = '0';
+  bigDisplay.innerHTML = '';
   smallDisplay.innerHTML = '';
+  firstOperand = 0;
+  secondOperand = 0;
+  theOperator = '';
 }
 
 const display = document.querySelector('.display');
@@ -50,7 +53,7 @@ nums.forEach(num => {
 
 operators.forEach(operator => {
   operator.addEventListener('click', () => {
-    smallDisplay.innerHTML = firstOperand + operator.innerText;
+    smallDisplay.innerHTML = firstOperand + ' ' + operator.innerText;
     bigDisplay.innerHTML = '';
 
     if (operator.innerText == '+') {
@@ -62,11 +65,20 @@ operators.forEach(operator => {
     } else if (operator.innerText == '÷') {
       theOperator = divide;
     };
+
+    if(secondOperand !== 0) {
+      let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+      firstOperand = result;
+      secondOperand = 0; //reset the second operand/ fixes error when spam-clicking the operator
+      smallDisplay.innerHTML = firstOperand + ' ' + operator.innerText;
+    };
   });
 });
 
 equal.addEventListener('click', () => {
-  return bigDisplay.innerHTML = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+  let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+  bigDisplay.innerHTML = result;
+  smallDisplay.innerHTML += ' ' + secondOperand + ' ' + equal.innerText;
 });
 
 clearField.addEventListener('click', () => clear());
