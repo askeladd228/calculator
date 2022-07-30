@@ -40,18 +40,28 @@ let secondOperand = 0;
 let theOperator = '';
 
 nums.forEach(num => {
-  num.addEventListener('click', () => {
+  num.addEventListener('click', (e) => {
+    console.log(e);
     if (smallDisplay.innerHTML == '') {
+      //checks decimal
+      if((bigDisplay.innerHTML).includes('.')) {
+        if (e.target.outerText == '.'){
+          return;
+        };
+      };
       let bigDisplayValue = (bigDisplay.innerHTML += num.innerText);
       firstOperand = bigDisplayValue;
     };
     if (smallDisplay.innerHTML !== '') {
+       //checks decimal
+      if((bigDisplay.innerHTML).includes('.')) {
+        if (e.target.outerText == '.'){
+          return;
+        };
+      };
       let bigDisplayValueTwo = (bigDisplay.innerHTML += num.innerText);
       secondOperand = bigDisplayValueTwo;
     };
-    if((bigDisplay.innerHTML).includes('.')) {
-      bigDisplay.innerHTML += '';
-    }
   });
 });
 
@@ -110,10 +120,22 @@ window.addEventListener('keydown', function(e) {
   //num
   if (keyIn !== null) {
     if (smallDisplay.innerHTML == '') {
+      //checks decimal
+      if((bigDisplay.innerHTML).includes('.')) {
+        if (keyIn.innerText == '.'){
+          return;
+        };
+      };
       let bigDisplayValue = (bigDisplay.innerHTML += keyIn.innerText);
       firstOperand = bigDisplayValue;
     };
     if (smallDisplay.innerHTML !== '') {
+      //checks decimal
+      if((bigDisplay.innerHTML).includes('.')) {
+        if (keyIn.innerText == '.'){
+          return;
+        };
+      };
       let bigDisplayValueTwo = (bigDisplay.innerHTML += keyIn.innerText);
       secondOperand = bigDisplayValueTwo;
     };
