@@ -15,7 +15,7 @@ function divide(a, b) {
 };
 
 function operate (operator, a, b) {
-  return operator(a, b);
+  return Math.round((operator(a, b))*100)/100;
 }
 
 function clear () {
@@ -33,6 +33,7 @@ const nums = document.querySelectorAll('.num');
 const operators = document.querySelectorAll('.operator');
 const equal = document.querySelector('.operate');
 const clearField = document.querySelector('.clear');
+const del = document.querySelector('.del');
 
 let firstOperand = 0;
 let secondOperand = 0;
@@ -48,6 +49,9 @@ nums.forEach(num => {
       let bigDisplayValueTwo = (bigDisplay.innerHTML += num.innerText);
       secondOperand = bigDisplayValueTwo;
     };
+    if((bigDisplay.innerHTML).includes('.')) {
+      bigDisplay.innerHTML += '';
+    }
   });
 });
 
@@ -77,12 +81,90 @@ operators.forEach(operator => {
       let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
       bigDisplay.innerHTML = result;
       smallDisplay.innerHTML = firstOperand + ' ' + operator.innerText + ' ' + secondOperand + ' ' + equal.innerText;
+      if (secondOperand == 0) {
+        smallDisplay.innerHTML = result;
+      };
     });
   });
 });
 
-
-
 clearField.addEventListener('click', () => clear());
 
+del.addEventListener('click', () => {
+  bigDisplay.innerHTML = (bigDisplay.innerHTML).slice(0, (bigDisplay.innerHTML).length - 1); 
+});
+
+let keyIn;
+let operatorIn;
+let equalIn;
+let clearIn;
+let delIn;
+
+window.addEventListener('keydown', function(e) {
+  keyIn = document.querySelector(`.num[data-key = "${e.keyCode}"]`);
+  operatorIn = document.querySelector(`.operator[data-key = "${e.keyCode}"]`);
+  equalIn = document.querySelector(`.operate[data-key = "${e.keyCode}"]`);
+  clearIn = document.querySelector(`.clear[data-key = "${e.keyCode}"]`);
+  delIn = document.querySelector(`.del[data-key = "${e.keyCode}"]`);
+
+  //num
+  if (keyIn !== null) {
+    if (smallDisplay.innerHTML == '') {
+      let bigDisplayValue = (bigDisplay.innerHTML += keyIn.innerText);
+      firstOperand = bigDisplayValue;
+    };
+    if (smallDisplay.innerHTML !== '') {
+      let bigDisplayValueTwo = (bigDisplay.innerHTML += keyIn.innerText);
+      secondOperand = bigDisplayValueTwo;
+    };
+  }
+
+  //operator
+  if(operatorIn !== null) {
+    smallDisplay.innerHTML = firstOperand + ' ' + operatorIn.innerText;
+    bigDisplay.innerHTML = '';
+
+    if (operatorIn.innerText == '+') {
+      theOperator = sum;
+    } else if (operatorIn.innerText == '-') {
+        theOperator = substract;
+    } else if (operatorIn.innerText == '×') {
+        theOperator = multiply;
+    } else if (operatorIn.innerText == '÷') {
+        theOperator = divide;
+    };
+
+    if(secondOperand !== 0) {
+      let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+      firstOperand = result;
+      secondOperand = 0; //reset the second operand/ fixes error when spam-clicking the operator
+      smallDisplay.innerHTML = firstOperand + ' ' + operatorIn.innerText;
+    }; 
+  };
+
+  //calculate
+  if(equalIn !== null) {
+    let result = operate(theOperator, parseFloat(firstOperand), parseFloat(secondOperand));
+    bigDisplay.innerHTML = result;
+    smallDisplay.innerHTML = firstOperand + ' ' + operatorIn.innerText + ' ' + secondOperand + ' ' + equalIn.innerText;
+    if (secondOperand == 0) {
+      smallDisplay.innerHTML = result;
+    };
+  };
+
+  //clear
+  if(clearIn !== null) {
+    bigDisplay.innerHTML = '';
+    smallDisplay.innerHTML = '';
+    firstOperand = 0;
+    secondOperand = 0;
+    theOperator = '';
+  };
+
+  //delete
+  if(delIn !== null) {
+    bigDisplay.innerHTML = (bigDisplay.innerHTML).slice(0, (bigDisplay.innerHTML).length - 1); 
+  }
+}); 
+  
 
